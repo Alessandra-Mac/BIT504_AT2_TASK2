@@ -11,12 +11,15 @@ The goal is to demonstrate proficiency in source and version control using GitHu
 ### Task 1: GitHub Repository Setup and Version Control
 - [x] Create Repository
 - [x] Upload Source Code
-- [ ] Branching and Commits
-- [ ] Pull Requests
+- [x] Branching and Commits
+- [x] Pull Requests
 
 ### Task 2: Build a Tic-Tac-Toe Game in Java
-- [ ] Experiment 1 - 
-- [ ] Experiment 2 - 
+- [x] Experiment 1 - Initialization & Basic Logic
+- [ ] Experiment 2 - Quick Restart of games
+- [ ] Experiment 3 - Score Tracking between Players
+- [ ] Experiment 4 - UI & Menus 
+- [ ] Experiment 5 - Player vs Computer Mode ?
 
 ### Task 3: UML Documentation
-- [ ] Class Diagram
+- [ ] Class Diagram 
