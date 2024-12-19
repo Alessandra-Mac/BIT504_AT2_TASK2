@@ -25,6 +25,7 @@ public class GameMain extends JPanel implements MouseListener{
 	/*declare game object variables*/
 	// the game board 
 	private Board board;
+	private JPanel boardPanel;
 	private GameState currentState;
 	// the current player
 	private Player currentPlayer; 
@@ -34,7 +35,6 @@ public class GameMain extends JPanel implements MouseListener{
 
 	/** Constructor to set up the UI and game components on the panel */
 	public GameMain() {
-		// TODO: This JPanel fires a MouseEvent on MouseClicked so add required event listener to 'this'.          
 	    addMouseListener(this);
 	    
 		// Set up the status bar (JLabel) to display status message
@@ -43,13 +43,56 @@ public class GameMain extends JPanel implements MouseListener{
 		statusBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));       
 		statusBar.setOpaque(true);       
 		statusBar.setBackground(Color.LIGHT_GRAY);  
-		
+
+		// Restart Button
+		JButton restartButton = new JButton("Restart");
+		restartButton.setFont(new Font(Font.DIALOG, Font.BOLD, 14));
+		restartButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				initGame();
+				repaint();
+			}
+		});
+
+		//Set Board Panel for canvas
+		boardPanel = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				//fill background and set colour to white
+				super.paintComponent(g);
+				setBackground(Color.WHITE);
+				//ask the game board to paint itself
+				board.paint(g);
+				//set status bar message
+				if (currentState == GameState.Playing) {
+					statusBar.setForeground(Color.BLACK);
+					if (currentPlayer == Player.Cross) {
+						statusBar.setText("X's Turn");
+					} else {
+						statusBar.setText("O's Turn");
+					}
+				} else if (currentState == GameState.Draw) {
+					statusBar.setForeground(Color.RED);
+					statusBar.setText("It's a Draw! Click to play again.");
+				} else if (currentState == GameState.Cross_won) {
+					statusBar.setForeground(Color.RED);
+					statusBar.setText("'X' Won! Click to play again.");
+				} else if (currentState == GameState.Nought_won) {
+					statusBar.setForeground(Color.RED);
+					statusBar.setText("'O' Won! Click to play again.");
+				}
+			}
+		};
+
 		//layout of the panel is in border layout
-		setLayout(new BorderLayout());       
+		setLayout(new BorderLayout());
+		add(restartButton, BorderLayout.NORTH);
+		add(boardPanel, BorderLayout.CENTER);
 		add(statusBar, BorderLayout.SOUTH);
 
 		// account for statusBar height in overall height
-		setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT + 30));
+		setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT + 50));
 		board = new Board();
 		initGame();
 	}
@@ -61,7 +104,7 @@ public class GameMain extends JPanel implements MouseListener{
 				//create a main window to contain the panel
 				JFrame frame = new JFrame(TITLE);
 				GameMain gamePanel = new GameMain();
-				frame.add(gamePanel);
+				 frame.add(gamePanel);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.pack();
 				frame.setLocationRelativeTo(null);
@@ -69,32 +112,6 @@ public class GameMain extends JPanel implements MouseListener{
 	         }
 		 });
 	}
-	/** Custom painting codes on this JPanel */
-	public void paintComponent(Graphics g) {
-		//fill background and set colour to white
-		super.paintComponent(g);
-		setBackground(Color.WHITE);
-		//ask the game board to paint itself
-		board.paint(g);
-		//set status bar message
-		if (currentState == GameState.Playing) {          
-			statusBar.setForeground(Color.BLACK);          
-			if (currentPlayer == Player.Cross) {   
-				statusBar.setText("X's Turn");
-			} else {
-				statusBar.setText("O's Turn");
-			}       
-			} else if (currentState == GameState.Draw) {          
-				statusBar.setForeground(Color.RED);          
-				statusBar.setText("It's a Draw! Click to play again.");       
-			} else if (currentState == GameState.Cross_won) {          
-				statusBar.setForeground(Color.RED);          
-				statusBar.setText("'X' Won! Click to play again.");       
-			} else if (currentState == GameState.Nought_won) {          
-				statusBar.setForeground(Color.RED);          
-				statusBar.setText("'O' Won! Click to play again.");       
-			}
-		}
 		
 	
 	  /** Initialise the game-board contents and the current status of GameState and Player */
