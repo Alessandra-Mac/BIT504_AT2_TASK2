@@ -16,7 +16,7 @@ The goal is to demonstrate proficiency in source and version control using GitHu
 
 ### Task 2: Build a Tic-Tac-Toe Game in Java
 - [x] Experiment 1 - Initialization & Basic Logic
-- [ ] Experiment 2 - Quick Restart of games
+- [x] Experiment 2 - Quick Restart of games
 - [ ] Experiment 3 - Score Tracking between Players
 - [ ] Experiment 4 - UI & Menus 
 - [ ] Experiment 5 - Player vs Computer Mode ?
