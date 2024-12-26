@@ -5,6 +5,8 @@ public class Board {
 	public static final int GRID_WIDTH = 8;
 	// grid line half width
 	public static final int GRID_WIDTH_HALF = GRID_WIDTH / 2;
+	//Constant for UI Color
+	Color active =  Color.decode("#404249"); // Light Gray
 
 	//2D array of ROWS-by-COLS Cell instances
 	Cell [][] cells;
@@ -72,7 +74,7 @@ public class Board {
 	 */
 	public void paint(Graphics g) {
 		//draw the grid
-		g.setColor(Color.gray);
+		g.setColor(active);
 
 
 		for (int row = 1; row < GameMain.ROWS; ++row) {

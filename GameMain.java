@@ -5,7 +5,15 @@ import javax.swing.*;
 
 
 public class GameMain extends JPanel implements MouseListener{
-	//Constants for game 
+	//Constants for UI Colours
+	Color primary = Color.decode("#313338"); //Gray
+	Color secondary = Color.decode("#2b2d31"); // Gray Shade Darker
+	Color tertiary = Color.decode("#1e1f22"); // Gray Darkest Shade
+
+	Color primaryText = Color.decode("#edeef0"); // White
+	Color secondaryText = Color.decode("#b1b5bc"); // Light Gray
+
+	//Constants for game
 	// number of ROWS by COLS cell constants 
 	public static final int ROWS = 3;
 	public static final int COLS = 3;
@@ -48,21 +56,22 @@ public class GameMain extends JPanel implements MouseListener{
 
 		// Set up the status bar (JLabel) to display status message
 		statusBar = new JLabel("         ");
-		statusBar.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 14));
+		statusBar.setFont(new Font("Verdana", Font.BOLD, 14));
 		statusBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));
 		statusBar.setOpaque(true);
-		statusBar.setBackground(Color.LIGHT_GRAY);
+		statusBar.setBackground(secondary);
 
 		// Restart Button
-		JButton restartButton = new JButton("Restart");
-		restartButton.setFont(new Font(Font.DIALOG, Font.BOLD, 14));
-		restartButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				initGame();
-				repaint();
-			}
-		});
+		JButton restartButton = new JButton("↻");
+		restartButton.setForeground(primaryText);
+		restartButton.setBackground(tertiary);
+		restartButton.setBorderPainted(false);
+		restartButton.setFocusPainted(false);
+		restartButton.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
+		restartButton.addActionListener(_ -> {
+            initGame();
+            repaint();
+        });
 
 		//Set Board Panel for canvas
 		boardPanel = new JPanel() {
@@ -70,42 +79,51 @@ public class GameMain extends JPanel implements MouseListener{
 			protected void paintComponent(Graphics g) {
 				//fill background and set colour to white
 				super.paintComponent(g);
-				setBackground(Color.WHITE);
+				setBackground(primary);
 				//ask the game board to paint itself
 				board.paint(g);
 				//set status bar message
 				if (currentState == GameState.Playing) {
-					statusBar.setForeground(Color.BLACK);
+					statusBar.setForeground(secondaryText);
 					if (currentPlayer == Player.Cross) {
-						statusBar.setText("X's Turn");
+						statusBar.setText("<HTML><span style='color:#2196f3'>Player 1's </span><span style='color:#edeef0';>Turn</span></HTML>");
 					} else {
-						statusBar.setText("O's Turn");
+						statusBar.setText("<HTML><span style='color:#f50057'>Player 2's </span><span style='color:#edeef0';>Turn</span></HTML>");
 					}
 				} else if (currentState == GameState.Draw) {
-					statusBar.setForeground(Color.RED);
+					statusBar.setForeground(primaryText);
 					statusBar.setText("It's a Draw! Click to play again.");
 				} else if (currentState == GameState.Cross_won) {
-					statusBar.setForeground(Color.RED);
-					statusBar.setText("'X' Won! Click to play again.");
+					statusBar.setText("<HTML><span style='color:#2196f3'>Player 1 </span><span style='color:#edeef0';>Won! Click to play again</span></HTML>");
 				} else if (currentState == GameState.Nought_won) {
-					statusBar.setForeground(Color.RED);
-					statusBar.setText("'O' Won! Click to play again.");
+					statusBar.setForeground(primaryText);
+					statusBar.setText("<HTML><span style='color:#f50057'>Player 2 </span><span style='color:#edeef0';>Won! Click to play again</span></HTML>");
 				}
 			}
 		};
 		//North Panel
-		scoreLabelX = new JLabel("X: 0");
-		scoreLabelX.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 14));
 
-		scoreLabelO = new JLabel("O: 0");
-		scoreLabelO.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 14));
+		//this creates a label that is centered & uses Player Ones Name as Blue & Score as colour primary
+		scoreLabelX = new JLabel("<HTML><center><span style='color:#2196f3;'>Player 1</span><br><span style='color:#edeef0;'>"+ scoreX +"</span></center></HTML>");
+		scoreLabelX.setFont(new Font("Verdana", Font.BOLD, 18));
+		scoreLabelX.setHorizontalAlignment(SwingConstants.CENTER);
+		scoreLabelX.setVerticalAlignment(SwingConstants.CENTER);
 
-		JPanel northPanel = new JPanel(new BorderLayout());
+		//this creates a label that is centered & uses Player Twos Name as Red & Score as colour primary
+		scoreLabelO = new JLabel("<HTML><center><span style='color:#f50057;'>Player 2</span><br><span style='color:#edeef0;'>"+ scoreO + "</span></center></HTML>");
+		scoreLabelO.setFont(new Font("Verdana", Font.BOLD, 18));
+		scoreLabelO.setHorizontalAlignment(SwingConstants.CENTER);
+		scoreLabelO.setVerticalAlignment(SwingConstants.CENTER);
+
+
+		JPanel northPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
 		northPanel.setPreferredSize(new Dimension(CANVAS_WIDTH, 50));
+		northPanel.setBackground(tertiary);
 
-		northPanel.add(scoreLabelX,BorderLayout.EAST);
+
+		northPanel.add(scoreLabelX,BorderLayout.WEST);
 		northPanel.add(restartButton,BorderLayout.CENTER);
-		northPanel.add(scoreLabelO,BorderLayout.WEST);
+		northPanel.add(scoreLabelO,BorderLayout.EAST);
 
 		//layout of the panel is in border layout
 		setLayout(new BorderLayout());
@@ -121,18 +139,16 @@ public class GameMain extends JPanel implements MouseListener{
 
 	public static void main(String[] args) {
 		// Run GUI code in Event Dispatch thread for thread safety.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				//create a main window to contain the panel
-				JFrame frame = new JFrame(TITLE);
-				GameMain gamePanel = new GameMain();
-				frame.add(gamePanel);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-			}
-		});
+		javax.swing.SwingUtilities.invokeLater(() -> {
+            //create a main window to contain the panel
+            JFrame frame = new JFrame(TITLE);
+            GameMain gamePanel = new GameMain();
+            frame.add(gamePanel);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
 	}
 
 
@@ -159,11 +175,12 @@ public class GameMain extends JPanel implements MouseListener{
 			currentState = (thePlayer == Player.Cross) ? GameState.Cross_won : GameState.Nought_won;
 			if (thePlayer == Player.Cross) {
 				scoreX++;
-				scoreLabelX.setText("X: " + scoreX);
+				scoreLabelX.setText("<HTML><center><span style='color:#2196f3;'>Player 1</span><br><span style='color:#edeef0;'>" + scoreX + "</span></center></HTML>");
+
 			}
 			else{
 				scoreO++;
-				scoreLabelO.setText("O:" + scoreO);
+				scoreLabelO.setText("<HTML><center><span style='color:f50057;'>Player 2</span><br><span style='color:#edeef0;'>" + scoreO + "</span></center></HTML>");
 			}
 		} else if (board.isDraw ()) {
 			currentState = GameState.Draw;
