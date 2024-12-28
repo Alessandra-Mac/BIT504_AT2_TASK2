@@ -18,7 +18,7 @@ The goal is to demonstrate proficiency in source and version control using GitHu
 - [x] Experiment 1 - Initialization & Basic Logic
 - [x] Experiment 2 - Quick Restart of games
 - [x] Experiment 3 - Score Tracking between Players
-- [ ] Experiment 4 - UI & Menus 
+- [x] Experiment 4 - UI & Menus 
 
 ### Task 3: UML Documentation
-- [ ] Class Diagram 
+- [x] Class Diagram 
